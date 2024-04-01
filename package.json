@@ -1,0 +1,19 @@
+{
+  "name": "datarock-tennis-match",
+  "version": "1.0.0",
+  "description": "Interview screening question.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest src",
+    "start": "npm run build && node build/index.js",
+    "build": "tsc"
+  },
+  "author": "Chiedozie Ihejirika",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.4.3"
+  }
+}
