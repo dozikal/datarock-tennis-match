@@ -1,12 +1,14 @@
 # Datarock Tennis Match
 
 Coding interview question.
+I hope you enjoy evaluating this as much as I enjoyed building it. :)
 
 ## Notes
 
 - This code will only run ONLY 1 Set of a Tennis match even though the design permits more Sets.
 - Tie-breaker condition has not been attempted because match is limited to 1 set.
 - Testing is NOT exhaustive. Some tests have deliberately been left out.
+- Methods have been designed to prevent mocking and facilitate easier Unit testing.
 
 ## Setup
 
