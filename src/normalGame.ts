@@ -1,36 +1,35 @@
-export interface GameStats {
-  status: "in-progress" | "completed";
+export interface Stats {
+  status: GameStatus;
+  points: Points;
   winnerIndex: number | null;
 }
-type GameType = "normal" | "tie-breaker";
-type Points = [number, number];
-
+export interface TennisGame {
+  stats: Stats;
+  incrementPoint: (playerIndex: number) => Stats;
+  score: (playerNames: [string, string], points?: Points) => string;
+}
+export type GameStatus = "in-progress" | "completed";
+export type Points = [number, number];
 const BASIC_TENNIS_CALLS = ["0", "15", "30", "40"];
 
-export class TennisGame {
-  points: Points;
-  stats: GameStats;
-  gameType: GameType;
+export class NormalGame implements TennisGame {
+  stats: Stats;
 
-  constructor(type: GameType) {
-    if (type === "tie-breaker") {
-      throw new Error("not implemented");
-    }
-    this.gameType = type;
-    this.points = [0, 0];
-    this.stats = { winnerIndex: null, status: "in-progress" };
+  constructor() {
+    this.stats = { winnerIndex: null, status: "in-progress", points: [0, 0] };
   }
 
   // Increase points by 1 for a player
-  incrementPoint = (playerIndex: number): GameStats => {
+  incrementPoint = (playerIndex: number): Stats => {
     if (this.stats.status === "completed") return this.stats;
-    this.points[playerIndex] += 1;
 
-    return this.checkWinCondition();
+    this.stats.points[playerIndex] += 1;
+    this.stats = this.generateStats();
+    return this.stats;
   };
 
-  // Check if a player has won
-  checkWinCondition = (points = this.points): GameStats => {
+  // Check if a player has won and use this info to generate stats
+  generateStats = (points = this.stats.points): Stats => {
     const points0 = points[0];
     const points1 = points[1];
 
@@ -39,15 +38,18 @@ export class TennisGame {
 
       if (pointsDifference >= 2) {
         const winnerIndex = points0 > points1 ? 0 : 1;
-        return { status: "completed", winnerIndex };
+        return { status: "completed", winnerIndex, points };
       }
     }
 
-    return { status: "in-progress", winnerIndex: null };
+    return { status: "in-progress", winnerIndex: null, points };
   };
 
   // Return score as string
-  score = (playerNames: [string, string], points = this.points): string => {
+  score = (
+    playerNames: [string, string],
+    points = this.stats.points
+  ): string => {
     const points0 = points[0];
     const points1 = points[1];
 

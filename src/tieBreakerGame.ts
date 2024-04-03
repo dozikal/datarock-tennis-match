@@ -1,13 +1,13 @@
-import { Points, Stats } from "./normalGame";
+import { Stats, TennisGame } from "./normalGame";
 
-export class TennisSet {
+export class TieBreakerGame implements TennisGame {
   stats: Stats;
 
   constructor() {
-    this.stats = { points: [0, 0], winnerIndex: null, status: "in-progress" };
+    this.stats = { winnerIndex: null, status: "in-progress", points: [0, 0] };
   }
 
-  // Increase point by 1 for a player
+  // Increase points by 1 for a player
   incrementPoint = (playerIndex: number): Stats => {
     if (this.stats.status === "completed") return this.stats;
 
@@ -17,15 +17,12 @@ export class TennisSet {
     return this.stats;
   };
 
-  // This method checks win condition and uses it to generate stats
+  // Check if a player has won and use this info to generate stats
   generateStats = (points = this.stats.points): Stats => {
     const points0 = points[0];
     const points1 = points[1];
 
-    if (points0 === 7) return { status: "completed", winnerIndex: 0, points };
-    if (points1 === 7) return { status: "completed", winnerIndex: 1, points };
-
-    if (points0 >= 6 || points1 >= 6) {
+    if (points0 >= 7 || points1 >= 7) {
       const pointsDifference = Math.abs(points0 - points1);
 
       if (pointsDifference >= 2) {
@@ -37,8 +34,12 @@ export class TennisSet {
     return { status: "in-progress", winnerIndex: null, points };
   };
 
-  // Return the score as string
-  score = (points = this.stats.points) => {
-    return `${points[0]}-${points[1]}`;
+  // Return score as string
+  score = (_: [string, string], points = this.stats.points): string => {
+    const points0 = points[0];
+    const points1 = points[1];
+
+    if (this.stats.status === "completed") return "";
+    return `${points0}-${points1}`;
   };
 }
