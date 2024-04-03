@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TennisSet = void 0;
-class TennisSet {
+exports.TieBreakerGame = void 0;
+class TieBreakerGame {
     constructor() {
-        // Increase point by 1 for a player
+        // Increase points by 1 for a player
         this.incrementPoint = (playerIndex) => {
             if (this.stats.status === "completed")
                 return this.stats;
@@ -11,15 +11,11 @@ class TennisSet {
             this.stats = this.generateStats();
             return this.stats;
         };
-        // This method checks win condition and uses it to generate stats
+        // Check if a player has won and use this info to generate stats
         this.generateStats = (points = this.stats.points) => {
             const points0 = points[0];
             const points1 = points[1];
-            if (points0 === 7)
-                return { status: "completed", winnerIndex: 0, points };
-            if (points1 === 7)
-                return { status: "completed", winnerIndex: 1, points };
-            if (points0 >= 6 || points1 >= 6) {
+            if (points0 >= 7 || points1 >= 7) {
                 const pointsDifference = Math.abs(points0 - points1);
                 if (pointsDifference >= 2) {
                     const winnerIndex = points0 > points1 ? 0 : 1;
@@ -28,11 +24,15 @@ class TennisSet {
             }
             return { status: "in-progress", winnerIndex: null, points };
         };
-        // Return the score as string
-        this.score = (points = this.stats.points) => {
-            return `${points[0]}-${points[1]}`;
+        // Return score as string
+        this.score = (_, points = this.stats.points) => {
+            const points0 = points[0];
+            const points1 = points[1];
+            if (this.stats.status === "completed")
+                return "";
+            return `${points0}-${points1}`;
         };
-        this.stats = { points: [0, 0], winnerIndex: null, status: "in-progress" };
+        this.stats = { winnerIndex: null, status: "in-progress", points: [0, 0] };
     }
 }
-exports.TennisSet = TennisSet;
+exports.TieBreakerGame = TieBreakerGame;

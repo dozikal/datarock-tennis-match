@@ -1,31 +1,32 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TennisGame = void 0;
+exports.NormalGame = void 0;
 const BASIC_TENNIS_CALLS = ["0", "15", "30", "40"];
-class TennisGame {
-    constructor(type) {
+class NormalGame {
+    constructor() {
         // Increase points by 1 for a player
         this.incrementPoint = (playerIndex) => {
             if (this.stats.status === "completed")
                 return this.stats;
-            this.points[playerIndex] += 1;
-            return this.checkWinCondition();
+            this.stats.points[playerIndex] += 1;
+            this.stats = this.generateStats();
+            return this.stats;
         };
-        // Check if a player has won
-        this.checkWinCondition = (points = this.points) => {
+        // Check if a player has won and use this info to generate stats
+        this.generateStats = (points = this.stats.points) => {
             const points0 = points[0];
             const points1 = points[1];
             if (points0 >= 4 || points1 >= 4) {
                 const pointsDifference = Math.abs(points0 - points1);
                 if (pointsDifference >= 2) {
                     const winnerIndex = points0 > points1 ? 0 : 1;
-                    return { status: "completed", winnerIndex };
+                    return { status: "completed", winnerIndex, points };
                 }
             }
-            return { status: "in-progress", winnerIndex: null };
+            return { status: "in-progress", winnerIndex: null, points };
         };
         // Return score as string
-        this.score = (playerNames, points = this.points) => {
+        this.score = (playerNames, points = this.stats.points) => {
             const points0 = points[0];
             const points1 = points[1];
             // Deuce condition
@@ -47,12 +48,7 @@ class TennisGame {
             // No winner or special conditions, game still in play
             return `${BASIC_TENNIS_CALLS[points0]}-${BASIC_TENNIS_CALLS[points1]}`;
         };
-        if (type === "tie-breaker") {
-            throw new Error("not implemented");
-        }
-        this.gameType = type;
-        this.points = [0, 0];
-        this.stats = { winnerIndex: null, status: "in-progress" };
+        this.stats = { winnerIndex: null, status: "in-progress", points: [0, 0] };
     }
 }
-exports.TennisGame = TennisGame;
+exports.NormalGame = NormalGame;
